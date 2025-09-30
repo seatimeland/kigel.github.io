@@ -1,151 +1,47 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#3B82F6">
-    <title>Упражнения Кегеля</title>
-    
-    <!-- React и Babel -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        // Иконки Lucide React
-        const { Play, Pause, Square, TrendingUp, Clock, Calendar, Award, Settings, ChevronRight, Download } = lucide;
-        
-        // Создаем компоненты иконок
-        const Icon = ({ icon: IconComponent, ...props }) => {
-            React.useEffect(() => {
-                lucide.createIcons();
-            }, []);
-            return <i data-lucide={IconComponent} {...props}></i>;
-        };
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span>{t.language}</span>
+                        <select
+                          value={language}
+                          onChange={(e) => setLanguage(e.target.value)}
+                          className={`${isDark ? 'bg-gray-700' : 'bg-gray-100'} px-4 py-2 rounded-lg`}
+                        >
+                          <option value="ru">Русский</option>
+                          <option value="en">English</option>
+                        </select>
+                      </div>
 
-        // ВАШ КОД НАЧИНАЕТСЯ ЗДЕСЬ
-        const translations = {
-          ru: {
-            appName: 'Упражнения Кегеля',
-            strength: 'Сила',
-            endurance: 'Выносливость',
-            start: 'Начать тренировку',
-            pause: 'Пауза',
-            resume: 'Продолжить',
-            stop: 'Завершить',
-            contract: 'НАПРЯГАЙТЕ',
-            relax: 'РАССЛАБЛЯЙТЕ',
-            prepare: 'ГОТОВЬТЕСЬ',
-            done: 'ЗАВЕРШЕНО',
-            statistics: 'Статистика',
-            today: 'Сегодня',
-            week: 'Неделя',
-            allTime: 'Всё время',
-            sessions: 'Сессий',
-            reps: 'Повторений',
-            totalTime: 'Общее время',
-            settings: 'Настройки',
-            contractTime: 'Время напряжения',
-            relaxTime: 'Время расслабления',
-            repetitions: 'Повторений',
-            seconds: 'сек',
-            language: 'Язык',
-            theme: 'Тема',
-            light: 'Светлая',
-            dark: 'Тёмная',
-            voiceEnabled: 'Голосовые команды',
-            history: 'История тренировок',
-            strengthDesc: 'Длительные сокращения для развития силы мышц тазового дна',
-            enduranceDesc: 'Быстрые сокращения для развития выносливости',
-            greatJob: 'Отличная работа!',
-            completedSession: 'Вы завершили тренировку',
-            installApp: 'Установить приложение',
-            installInstructions: 'Нажмите кнопку "Поделиться" и выберите "На экран Домой"',
-            dataRestored: 'Данные восстановлены',
-          },
-          en: {
-            appName: 'Kegel Exercises',
-            strength: 'Strength',
-            endurance: 'Endurance',
-            start: 'Start Workout',
-            pause: 'Pause',
-            resume: 'Resume',
-            stop: 'Stop',
-            contract: 'CONTRACT',
-            relax: 'RELAX',
-            prepare: 'PREPARE',
-            done: 'COMPLETED',
-            statistics: 'Statistics',
-            today: 'Today',
-            week: 'Week',
-            allTime: 'All Time',
-            sessions: 'Sessions',
-            reps: 'Reps',
-            totalTime: 'Total Time',
-            settings: 'Settings',
-            contractTime: 'Contract Time',
-            relaxTime: 'Relax Time',
-            repetitions: 'Repetitions',
-            seconds: 'sec',
-            language: 'Language',
-            theme: 'Theme',
-            light: 'Light',
-            dark: 'Dark',
-            voiceEnabled: 'Voice Commands',
-            history: 'Workout History',
-            strengthDesc: 'Long contractions for pelvic floor muscle strength',
-            enduranceDesc: 'Quick contractions for endurance development',
-            greatJob: 'Great Job!',
-            completedSession: 'You completed the workout',
-            installApp: 'Install App',
-            installInstructions: 'Tap the "Share" button and select "Add to Home Screen"',
-            dataRestored: 'Data restored',
+                      <div className="flex items-center justify-between">
+                        <span>{t.theme}</span>
+                        <select
+                          value={theme}
+                          onChange={(e) => setTheme(e.target.value)}
+                          className={`${isDark ? 'bg-gray-700' : 'bg-gray-100'} px-4 py-2 rounded-lg`}
+                        >
+                          <option value="light">{t.light}</option>
+                          <option value="dark">{t.dark}</option>
+                        </select>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span>{t.voiceEnabled}</span>
+                        <button
+                          onClick={() => setVoiceEnabled(!voiceEnabled)}
+                          className={`w-14 h-8 rounded-full transition-colors ${voiceEnabled ? 'bg-blue-600' : 'bg-gray-300'}`}
+                        >
+                          <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${voiceEnabled ? 'translate-x-7' : 'translate-x-1'}`} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
           }
+
+          return null;
         };
 
-        const App = () => {
-          // Весь остальной код вашего компонента App
-          // (вставьте сюда весь код из const App = () => { до последней фигурной скобки компонента)
-          const [screen, setScreen] = React.useState('home');
-          const [mode, setMode] = React.useState(null);
-          const [isTraining, setIsTraining] = React.useState(false);
-          const [isPaused, setIsPaused] = React.useState(false);
-          const [phase, setPhase] = React.useState('prepare');
-          const [timeLeft, setTimeLeft] = React.useState(3);
-          const [currentRep, setCurrentRep] = React.useState(0);
-          const [language, setLanguage] = React.useState('ru');
-          const [theme, setTheme] = React.useState('light');
-          const [voiceEnabled, setVoiceEnabled] = React.useState(true);
-          const [showInstallPrompt, setShowInstallPrompt] = React.useState(false);
-          const [deferredPrompt, setDeferredPrompt] = React.useState(null);
-          
-          const [settings, setSettings] = React.useState({
-            strength: { contractTime: 10, relaxTime: 10, reps: 10 },
-            endurance: { contractTime: 2, relaxTime: 2, reps: 30 }
-          });
-          
-          const [stats, setStats] = React.useState({
-            strength: { today: 0, week: 0, allTime: 0, totalReps: 0, totalTime: 0 },
-            endurance: { today: 0, week: 0, allTime: 0, totalReps: 0, totalTime: 0 }
-          });
-
-          const timerRef = React.useRef(null);
-          const t = translations[language];
-
-          // Вставьте сюда весь остальной код вашего компонента...
-          // (все useEffect, функции и return)
-        };
-
-        // Рендерим приложение
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
