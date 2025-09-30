@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3B82F6">
+    <title>Упражнения Кегеля</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // Простые компоненты для иконок (заменяем lucide-react на SVG)
+        const Play = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
+        const Pause = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>;
+        const Square = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"></rect></svg>;
+        const TrendingUp = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>;
+        const Clock = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
+        const Award = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>;
+        const Settings = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 21.54l4.24-4.24M21 12h-6m-6 0H3m13.22 4.22l4.24 4.24M1.54 1.54l4.24 4.24"></path></svg>;
+        const ChevronRight = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>;
+        const Download = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
+
+        const translations = {
+          ru: {
+            appName: 'Упражнения Кегеля',
+            strength: 'Сила',
+            endurance: 'Выносливость',
+            start: 'Начать тренировку',
+            pause: 'Пауза',
+            resume: 'Продолжить',
+            stop: 'Завершить',
+            contract: 'НАПРЯГАЙТЕ',
+            relax: 'РАССЛАБЛЯЙТЕ',
+            prepare: 'ГОТОВЬТЕСЬ',
+            done: 'ЗАВЕРШЕНО',
+            statistics: 'Статистика',
+            today: 'Сегодня',
+            week: 'Неделя',
+            allTime: 'Всё время',
+            sessions: 'Сессий',
+            reps: 'Повторений',
+            totalTime: 'Общее время',
+            settings: 'Настройки',
+            contractTime: 'Время напряжения',
+            relaxTime: 'Время расслабления',
+            repetitions: 'Повторений',
+            seconds: 'сек',
+            language: 'Язык',
+            theme: 'Тема',
+            light: 'Светлая',
+            dark: 'Тёмная',
+            voiceEnabled: 'Голосовые команды',
+            history: 'История тренировок',
+            strengthDesc: 'Длительные сокращения для развития силы мышц тазового дна',
+            enduranceDesc: 'Быстрые сокращения для развития выносливости',
+            greatJob: 'Отличная работа!',
+            completedSession: 'Вы завершили тренировку',
+            installApp: 'Установить приложение',
+            installInstructions: 'Нажмите кнопку "Поделиться" и выберите "На экран Домой"',
+            dataRestored: 'Данные восстановлены',
+          },
+          en: {
+            appName: 'Kegel Exercises',
+            strength: 'Strength',
+            endurance: 'Endurance',
+            start: 'Start Workout',
+            pause: 'Pause',
+            resume: 'Resume',
+            stop: 'Stop',
+            contract: 'CONTRACT',
+            relax: 'RELAX',
+            prepare: 'PREPARE',
+            done: 'COMPLETED',
+            statistics: 'Statistics',
+            today: 'Today',
+            week: 'Week',
+            allTime: 'All Time',
+            sessions: 'Sessions',
+            reps: 'Reps',
+            totalTime: 'Total Time',
+            settings: 'Settings',
+            contractTime: 'Contract Time',
+            relaxTime: 'Relax Time',
+            repetitions: 'Repetitions',
+            seconds: 'sec',
+            language: 'Language',
+            theme: 'Theme',
+            light: 'Light',
+            dark: 'Dark',
+            voiceEnabled: 'Voice Commands',
+            history: 'Workout History',
+            strengthDesc: 'Long contractions for pelvic floor muscle strength',
+            enduranceDesc: 'Quick contractions for endurance development',
+            greatJob: 'Great Job!',
+            completedSession: 'You completed the workout',
+            installApp: 'Install App',
+            installInstructions: 'Tap the "Share" button and select "Add to Home Screen"',
+            dataRestored: 'Data restored',
+          }
+        };
+
+        const App = () => {
+          const [screen, setScreen] = React.useState('home');
+          const [mode, setMode] = React.useState(null);
+          const [isTraining, setIsTraining] = React.useState(false);
+          const [isPaused, setIsPaused] = React.useState(false);
+          const [phase, setPhase] = React.useState('prepare');
+          const [timeLeft, setTimeLeft] = React.useState(3);
+          const [currentRep, setCurrentRep] = React.useState(0);
+          const [language, setLanguage] = React.useState('ru');
+          const [theme, setTheme] = React.useState('light');
+          const [voiceEnabled, setVoiceEnabled] = React.useState(true);
+          const [showInstallPrompt, setShowInstallPrompt] = React.useState(false);
+          const [deferredPrompt, setDeferredPrompt] = React.useState(null);
+          
+          const [settings, setSettings] = React.useState({
+            strength: { contractTime: 10, relaxTime: 10, reps: 10 },
+            endurance: { contractTime: 2, relaxTime: 2, reps: 30 }
+          });
+          
+          const [stats, setStats] = React.useState({
+            strength: { today: 0, week: 0, allTime: 0, totalReps: 0, totalTime: 0 },
+            endurance: { today: 0, week: 0, allTime: 0, totalReps: 0, totalTime: 0 }
+          });
+
+          const timerRef = React.useRef(null);
+          const t = translations[language];
+
+          React.useEffect(() => {
+            const loadData = () => {
+              try {
+                const savedSettings = JSON.parse(localStorage.getItem('kegelSettings') || 'null');
+                const savedStats = JSON.parse(localStorage.getItem('kegelStats') || 'null');
+                const savedLanguage = localStorage.getItem('kegelLanguage');
+                const savedTheme = localStorage.getItem('kegelTheme');
+                const savedVoice = localStorage.getItem('kegelVoice');
+
+                if (savedSettings) setSettings(savedSettings);
+                if (savedStats) setStats(savedStats);
+                if (savedLanguage) setLanguage(savedLanguage);
+                if (savedTheme) setTheme(savedTheme);
+                if (savedVoice !== null) setVoiceEnabled(savedVoice === 'true');
+              } catch (error) {
+                console.error('Error loading data:', error);
+              }
+            };
+
+            loadData();
+          }, []);
+
+          React.useEffect(() => {
+            localStorage.setItem('kegelSettings', JSON.stringify(settings));
+          }, [settings]);
+
+          React.useEffect(() => {
+            localStorage.setItem('kegelStats', JSON.stringify(stats));
+          }, [stats]);
+
+          React.useEffect(() => {
+            localStorage.setItem('kegelLanguage', language);
+          }, [language]);
+
+          React.useEffect(() => {
+            localStorage.setItem('kegelTheme', theme);
+          }, [theme]);
+
+          React.useEffect(() => {
+            localStorage.setItem('kegelVoice', voiceEnabled.toString());
+          }, [voiceEnabled]);
+
+          const speak = (text) => {
+            if (!voiceEnabled || !window.speechSynthesis) return;
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = language === 'ru' ? 'ru-RU' : 'en-US';
+            utterance.rate = 1.0;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+          };
+
+          const playBeep = (type) => {
+            try {
+              const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+              const oscillator = audioContext.createOscillator();
+              const gainNode = audioContext.createGain();
+              
+              oscillator.connect(gainNode);
+              gainNode.connect(audioContext.destination);
+              
+              oscillator.frequency.value = type === 'contract' ? 800 : 400;
+              oscillator.type = 'sine';
+              
+              gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+              
+              oscillator.start(audioContext.currentTime);
+              oscillator.stop(audioContext.currentTime + 0.3);
+            } catch(e) {
+              console.log('Audio not supported');
+            }
+          };
+
+          React.useEffect(() => {
+            if (!isTraining || isPaused) return;
+
+            timerRef.current = setInterval(() => {
+              setTimeLeft(prev => {
+                if (prev <= 1) {
+                  handlePhaseChange();
+                  return getNextPhaseTime();
+                }
+                return prev - 1;
+              });
+            }, 1000);
+
+            return () => clearInterval(timerRef.current);
+          }, [isTraining, isPaused, phase, currentRep, mode]);
+
+          const getNextPhaseTime = () => {
+            const config = settings[mode];
+            if (phase === 'prepare') return config.contractTime;
+            if (phase === 'contract') return config.relaxTime;
+            if (phase === 'relax') return config.contractTime;
+            return 0;
+          };
+
+          const handlePhaseChange = () => {
+            const config = settings[mode];
+            
+            if (phase === 'prepare') {
+              setPhase('contract');
+              speak(t.contract);
+              playBeep('contract');
+            } else if (phase === 'contract') {
+              setPhase('relax');
+              speak(t.relax);
+              playBeep('relax');
+              setCurrentRep(prev => prev + 1);
+            } else if (phase === 'relax') {
+              if (currentRep >= config.reps) {
+                completeWorkout();
+              } else {
+                setPhase('contract');
+                speak(t.contract);
+                playBeep('contract');
+              }
+            }
+          };
+
+          const completeWorkout = () => {
+            setIsTraining(false);
+            setPhase('done');
+            speak(t.greatJob);
+            
+            const config = settings[mode];
+            const sessionTime = (config.contractTime + config.relaxTime) * config.reps;
+            
+            setStats(prev => ({
+              ...prev,
+              [mode]: {
+                today: prev[mode].today + 1,
+                week: prev[mode].week + 1,
+                allTime: prev[mode].allTime + 1,
+                totalReps: prev[mode].totalReps + config.reps,
+                totalTime: prev[mode].totalTime + sessionTime
+              }
+            }));
+            
+            setTimeout(() => setScreen('stats'), 2000);
+          };
+
+          const startWorkout = (selectedMode) => {
+            setMode(selectedMode);
+            setScreen('training');
+            setIsTraining(true);
+            setIsPaused(false);
+            setPhase('prepare');
+            setCurrentRep(0);
+            setTimeLeft(3);
+            speak(t.prepare);
+          };
+
+          const togglePause = () => {
+            setIsPaused(!isPaused);
+          };
+
+          const stopWorkout = () => {
+            setIsTraining(false);
+            setScreen('home');
+            setPhase('prepare');
+            setCurrentRep(0);
+          };
+
+          const formatTime = (seconds) => {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+          };
+
+          const isDark = theme === 'dark';
+
+          if (screen === 'home') {
+            return (
+              <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-50'}`}>
+                <div className="max-w-4xl mx-auto p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-3xl font-bold">{t.appName}</h1>
+                    <button
+                      onClick={() => setScreen('settings')}
+                      className={`p-2 rounded-lg ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} shadow-md transition-colors`}
+                    >
+                      <Settings />
+                    </button>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
+                    <div
+                      onClick={() => startWorkout('strength')}
+                      className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 shadow-lg cursor-pointer hover:shadow-xl transition-all transform hover:-translate-y-1`}
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-blue-100 rounded-full">
+                          <TrendingUp />
+                        </div>
+                        <ChevronRight />
+                      </div>
+                      <h2 className="text-2xl font-bold mb-2">{t.strength}</h2>
+                      <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-4`}>{t.strengthDesc}</p>
+                      <div className={`${isDark ? 'text-gray-300' : 'text-gray-700'} text-sm space-y-1`}>
+                        <div>{settings.strength.contractTime}{t.seconds} / {settings.strength.relaxTime}{t.seconds}</div>
+                        <div>{settings.strength.reps} {t.repetitions.toLowerCase()}</div>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => startWorkout('endurance')}
+                      className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 shadow-lg cursor-pointer hover:shadow-xl transition-all transform hover:-translate-y-1`}
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-green-100 rounded-full">
+                          <Clock />
+                        </div>
+                        <ChevronRight />
+                      </div>
+                      <h2 className="text-2xl font-bold mb-2">{t.endurance}</h2>
+                      <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-4`}>{t.enduranceDesc}</p>
+                      <div className={`${isDark ? 'text-gray-300' : 'text-gray-700'} text-sm space-y-1`}>
+                        <div>{settings.endurance.contractTime}{t.seconds} / {settings.endurance.relaxTime}{t.seconds}</div>
+                        <div>{settings.endurance.reps} {t.repetitions.toLowerCase()}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setScreen('stats')}
+                    className={`w-full ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} rounded-xl p-4 shadow-md flex items-center justify-between transition-colors`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Award />
+                      <span className="font-semibold">{t.statistics}</span>
+                    </div>
+                    <ChevronRight />
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          if (screen === 'training') {
+            const config = settings[mode];
+            const progress = (currentRep / config.reps) * 100;
+            
+            return (
+              <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-50'} flex items-center justify-center p-6`}>
+                <div className="max-w-2xl w-full">
+                  <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl p-8 shadow-2xl`}>
+                    <div className="text-center mb-8">
+                      <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-4">
+                        {mode === 'strength' ? t.strength : t.endurance}
+                      </div>
+                      <div className="text-sm text-gray-500 mb-2">
+                        {t.repetitions}: {currentRep} / {config.reps}
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="text-center mb-8">
+                      <div className={`text-6xl font-bold mb-4 ${
+                        phase === 'prepare' ? 'text-yellow-500' :
+                        phase === 'contract' ? 'text-red-500' :
+                        phase === 'relax' ? 'text-green-500' :
+                        'text-blue-500'
+                      }`}>
+                        {timeLeft}
+                      </div>
+                      <div className={`text-3xl font-bold ${
+                        phase === 'prepare' ? 'text-yellow-500' :
+                        phase === 'contract' ? 'text-red-500' :
+                        phase === 'relax' ? 'text-green-500' :
+                        'text-blue-500'
+                      }`}>
+                        {phase === 'prepare' ? t.prepare :
+                         phase === 'contract' ? t.contract :
+                         phase === 'relax' ? t.relax :
+                         t.done}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 justify-center">
+                      <button
+                        onClick={togglePause}
+                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors"
+                      >
+                        {isPaused ? <Play /> : <Pause />}
+                        {isPaused ? t.resume : t.pause}
+                      </button>
+                      <button
+                        onClick={stopWorkout}
+                        className={`flex items-center gap-2 px-6 py-3 ${isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} rounded-xl font-semibold transition-colors`}
+                      >
+                        <Square />
+                        {t.stop}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (screen === 'stats') {
+            return (
+              <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-50'} p-6`}>
+                <div className="max-w-4xl mx-auto">
+                  <div className="flex items-center gap-4 mb-8">
+                    <button
+                      onClick={() => setScreen('home')}
+                      className={`p-2 ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} rounded-lg shadow-md transition-colors`}
+                    >
+                      ← Назад
+                    </button>
+                    <h1 className="text-3xl font-bold">{t.statistics}</h1>
+                  </div>
+
+                  {['strength', 'endurance'].map(mode => (
+                    <div key={mode} className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 shadow-lg mb-6`}>
+                      <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                        {mode === 'strength' ? <TrendingUp /> : <Clock />}
+                        {mode === 'strength' ? t.strength : t.endurance}
+                      </h2>
+                      
+                      <div className="grid grid-cols-3 gap-4 mb-6">
+                        <div className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-4 text-center`}>
+                          <div className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-1`}>{t.today}</div>
+                          <div className="text-2xl font-bold">{stats[mode].today}</div>
+                          <div className={`${isDark ? 'text-gray-500' : 'text-gray-500'} text-xs`}>{t.sessions}</div>
+                        </div>
+                        <div className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-4 text-center`}>
+                          <div className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-1`}>{t.week}</div>
+                          <div className="text-2xl font-bold">{stats[mode].week}</div>
+                          <div className={`${isDark ? 'text-gray-500' : 'text-gray-500'} text-xs`}>{t.sessions}</div>
+                        </div>
+                        <div className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-4 text-center`}>
+                          <div className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-1`}>{t.allTime}</div>
+                          <div className="text-2xl font-bold">{stats[mode].allTime}</div>
+                          <div className={`${isDark ? 'text-gray-500' : 'text-gray-500'} text-xs`}>{t.sessions}</div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-4`}>
+                          <div className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-1`}>{t.reps}</div>
+                          <div className="text-xl font-bold">{stats[mode].totalReps}</div>
+                        </div>
+                        <div className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-4`}>
+                          <div className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-1`}>{t.totalTime}</div>
+                          <div className="text-xl font-bold">{formatTime(stats[mode].totalTime)}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+
+          if (screen === 'settings') {
+            return (
+              <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-50'} p-6`}>
+                <div className="max-w-4xl mx-auto">
+                  <div className="flex items-center gap-4 mb-8">
+                    <button
+                      onClick={() => setScreen('home')}
+                      className={`p-2 ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} rounded-lg shadow-md transition-colors`}
+                    >
+                      ← Назад
+                    </button>
+                    <h1 className="text-3xl font-bold">{t.settings}</h1>
+                  </div>
+
+                  {['strength', 'endurance'].map(mode => (
+                    <div key={mode} className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 shadow-lg mb-6`}>
+                      <h2 className="text-xl font-bold mb-4">{mode === 'strength' ? t.strength : t.endurance}</h2>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <label className={`block ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>{t.contractTime}</label>
+                          <input
+                            type="range"
+                            min="1"
+                            max="20"
+                            value={settings[mode].contractTime}
+                            onChange={(e) => setSettings({
+                              ...settings,
+                              [mode]: { ...settings[mode], contractTime: parseInt(e.target.value) }
+                            })}
+                            className="w-full"
+                          />
+                          <div className="text-center text-lg font-semibold mt-2">{settings[mode].contractTime} {t.seconds}</div>
+                        </div>
+
+                        <div>
+                          <label className={`block ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>{t.relaxTime}</label>
+                          <input
+                            type="range"
+                            min="1"
+                            max="20"
+                            value={settings[mode].relaxTime}
+                            onChange={(e) => setSettings({
+                              ...settings,
+                              [mode]: { ...settings[mode], relaxTime: parseInt(e.target.value) }
+                            })}
+                            className="w-full"
+                          />
+                          <div className="text-center text-lg font-semibold mt-2">{settings[mode].relaxTime} {t.seconds}</div>
+                        </div>
+
+                        <div>
+                          <label className={`block ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>{t.repetitions}</label>
+                          <input
+                            type="range"
+                            min="5"
+                            max="50"
+                            step="5"
+                            value={settings[mode].reps}
+                            onChange={(e) => setSettings({
+                              ...settings,
+                              [mode]: { ...settings[mode], reps: parseInt(e.target.value) }
+                            })}
+                            className="w-full"
+                          />
+                          <div className="text-center text-lg font-semibold mt-2">{settings[mode].reps}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 shadow-lg`}>
+                    <h2 className="text-xl font-bold mb-4">{t.settings}</h2>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span>{t.language}</span>
+                        <select
+                          value={language}
+                          onChange={(e) => setLanguage(e.target.value)}
+                          className={`${isDark ? 'bg-gray-700' : 'bg-gray-100'} px-4 py-2 rounded-lg`}
+                        >
+                          <option value="ru">Русский</option>
+                          <option value="en">English</option>
+                        </select>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span>{t.theme}</span>
+                        <select
+                          value={theme}
+                          onChange={(e) => setTheme(e.target.value)}
+                          className={`${isDark ? 'bg-gray-700' : 'bg-gray-100'} px-4 py-2 rounded-lg`}
+                        >
+                          <option value="light">{t.light}</option>
+                          <option value="dark">{t.dark}</option>
+                        </select>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span>{t.voiceEnabled}</span>
+                        <button
+                          onClick={() => setVoiceEnabled(!voiceEnabled)}
+                          className={`w-14 h-8 rounded-full transition-colors ${voiceEnabled ? 'bg-blue-600' : 'bg-gray-300'}`}
+                        >
+                          <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${voiceEnabled ? 'translate-x-7' : 'translate-x-1'}`} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return null;
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
